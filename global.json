@@ -1,4 +1,9 @@
 {
+  {
+    "sdk": {
+      "version": "5.0.101"
+    }
+  }
   "tools": {
     "vs": {
       "version": "16.8"

@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.IO;
 
 namespace PrincessBrideTrivia.Tests
@@ -41,6 +42,20 @@ namespace PrincessBrideTrivia.Tests
 
             // Assert
             Assert.AreEqual(expectedResult, displayResult);
+        }
+
+        [TestMethod]
+        public void DisplayQuestion_ReturnsQuestionThatExists()
+        {
+            //Arrange
+
+
+            //Act
+
+
+            //Assert
+
+
         }
 
         [TestMethod]
