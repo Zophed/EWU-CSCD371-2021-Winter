@@ -23,6 +23,7 @@ namespace PrincessBrideTrivia
         }
 
         public static string GetPercentCorrect(double numberCorrectAnswers, double numberOfQuestions)
+            //changed the passed in objects to double from int
         {
             return (numberCorrectAnswers / numberOfQuestions * 100) + "%";
         }
@@ -89,6 +90,7 @@ namespace PrincessBrideTrivia
                 question.Answers[1] = answer2;
                 question.Answers[2] = answer3;
                 question.CorrectAnswerIndex = correctAnswerIndex;
+                questions[i] = question;//this was a change I made
             }
             return questions;
         }

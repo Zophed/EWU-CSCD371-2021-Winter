@@ -45,20 +45,6 @@ namespace PrincessBrideTrivia.Tests
         }
 
         [TestMethod]
-        public void DisplayQuestion_ReturnsQuestionThatExists()
-        {
-            //Arrange
-
-
-            //Act
-
-
-            //Assert
-
-
-        }
-
-        [TestMethod]
         public void GetFilePath_ReturnsFileThatExists()
         {
             // Arrange
