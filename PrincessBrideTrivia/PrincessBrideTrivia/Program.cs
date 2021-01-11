@@ -10,10 +10,23 @@ namespace PrincessBrideTrivia
             string filePath = GetFilePath();
             Question[] questions = LoadQuestions(filePath);
 
+            /*Added this here random variable to randomize the question selection for each round. The random variable 
+             */
+            Random random = new Random();
             int numberCorrect = 0;
+            int[] indicesUsed = new int[questions.Length];
             for (int i = 0; i < questions.Length; i++)
             {
-                bool result = AskQuestion(questions[i]);
+                int index;
+
+                while (true)
+                {
+                    index = GetRandomIndex(random, questions);
+                    if (!CheckIfArrayContainsInt(indicesUsed, index)) break;
+                }
+
+                
+                bool result = AskQuestion(questions[index]);
                 if (result)
                 {
                     numberCorrect++;
@@ -22,8 +35,26 @@ namespace PrincessBrideTrivia
             Console.WriteLine("You got " + GetPercentCorrect(numberCorrect, questions.Length) + " correct");
         }
 
+        /*Coninueing from the main method, the passed in random variable will choose a random index from 0 to the length
+         * of the questions file minus 1 to give an index for the next question. Using the random.next function should also prevent 
+         * double numbers from being chosen a second time.
+         */
+        public static int GetRandomIndex(Random random, Question[] questions)
+        {
+            return random.Next(questions.Length);
+        }
+
+        public static bool CheckIfArrayContainsInt(int[] indices, int randomIndex)
+        {
+            for (int i = 0; i < indices.Length; i++)
+            {
+                if (indices[i] == randomIndex) return true;
+            }
+            return false;
+        }
+
         public static string GetPercentCorrect(double numberCorrectAnswers, double numberOfQuestions)
-            //changed the passed in objects to double from int
+            //changed the passed in objects to double from int --ao
         {
             return (numberCorrectAnswers / numberOfQuestions * 100) + "%";
         }
@@ -90,7 +121,7 @@ namespace PrincessBrideTrivia
                 question.Answers[1] = answer2;
                 question.Answers[2] = answer3;
                 question.CorrectAnswerIndex = correctAnswerIndex;
-                questions[i] = question;//this was a change I made
+                questions[i] = question;//this was a change I made --ao
             }
             return questions;
         }

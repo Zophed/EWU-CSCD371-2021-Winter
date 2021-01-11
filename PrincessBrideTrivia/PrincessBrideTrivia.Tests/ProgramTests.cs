@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace PrincessBrideTrivia.Tests
@@ -21,6 +22,67 @@ namespace PrincessBrideTrivia.Tests
 
                 // Assert 
                 Assert.AreEqual(2, questions.Length);
+            }
+            finally
+            {
+                File.Delete(filePath);
+            }
+        }
+
+        [TestMethod]
+        public void GetRandomIndex_ReturnsRandomArrayIndex()
+        {
+            string filePath = Path.GetRandomFileName();
+            try
+            {
+                //Arrange
+                GenerateQuestionsFile(filePath, 5);
+                Question[] questions = Program.LoadQuestions(filePath);
+                Random random = new Random();
+                int[] indices = new int[5];
+                int[] indicesUsed = new int[questions.Length];
+
+                //Act
+                for(int i = 0; i < indices.Length; i++)
+                {
+                    while (true)
+                    {
+                        indices[i] = Program.GetRandomIndex(random, questions);
+                        if (!Program.CheckIfArrayContainsInt(indicesUsed, indices[i])) break;
+                    }
+                    indicesUsed[i] = indices[i];
+                }
+
+                //Assert
+                HashSet<int> isUnique = new HashSet<int>(indices);
+                Assert.AreEqual(indices.Length, isUnique.Count);
+
+            }
+            finally
+            {
+                File.Delete(filePath);
+            }
+        }
+
+        /*
+         * This is a second unit tests that confirms that Program.LoadQuestions() 
+         *has correctly filled the 'questions' array
+         */
+        [TestMethod]
+        public void LoadQuestions_RetrievesQuestionsFromFile_CheckContentOfOutputArray()
+        {
+            string filePath = Path.GetRandomFileName();
+            try
+            {
+                //Arrange
+                GenerateQuestionsFile(filePath, 5);
+
+                //Act
+                Question[] questions = Program.LoadQuestions(filePath);
+
+                //Assert
+                for(int i = 0; i < questions.Length; i++)
+                    Assert.IsNotNull(questions[i]);
             }
             finally
             {
@@ -73,6 +135,11 @@ namespace PrincessBrideTrivia.Tests
             Assert.AreEqual(expectedString, percentage);
         }
 
+        [TestMethod]
+        public void DisplayQuestion_ConsoleOuputIfCorrect()
+        {
+
+        }
 
         private static void GenerateQuestionsFile(string filePath, int numberOfQuestions)
         {
