@@ -43,11 +43,11 @@ namespace PrincessBrideTrivia.Tests
                 int[] indicesUsed = new int[questions.Length];
 
                 //Act
-                for(int i = 0; i < indices.Length; i++)
+                for (int i = 0; i < indices.Length; i++)
                 {
                     while (true)
                     {
-                        indices[i] = Program.GetRandomIndex(random, questions);
+                        indices[i] = random.Next(questions.Length + 1);
                         if (!Program.CheckIfArrayContainsInt(indicesUsed, indices[i])) break;
                     }
                     indicesUsed[i] = indices[i];
@@ -81,7 +81,7 @@ namespace PrincessBrideTrivia.Tests
                 Question[] questions = Program.LoadQuestions(filePath);
 
                 //Assert
-                for(int i = 0; i < questions.Length; i++)
+                for (int i = 0; i < questions.Length; i++)
                     Assert.IsNotNull(questions[i]);
             }
             finally
@@ -123,7 +123,7 @@ namespace PrincessBrideTrivia.Tests
         [DataRow(5, 10, "50%")]
         [DataRow(1, 10, "10%")]
         [DataRow(0, 10, "0%")]
-        public void GetPercentCorrect_ReturnsExpectedPercentage(int numberOfCorrectGuesses, 
+        public void GetPercentCorrect_ReturnsExpectedPercentage(int numberOfCorrectGuesses,
             int numberOfQuestions, string expectedString)
         {
             // Arrange

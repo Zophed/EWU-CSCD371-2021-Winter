@@ -21,27 +21,18 @@ namespace PrincessBrideTrivia
 
                 while (true)
                 {
-                    index = GetRandomIndex(random, questions);
-                    if (!CheckIfArrayContainsInt(indicesUsed, index)) break;
+                    index = random.Next(1, (questions.Length + 1));
+                    if (!CheckIfArrayContainsInt(indicesUsed, (index))) break;
                 }
+                indicesUsed[i] = index;
 
-                
-                bool result = AskQuestion(questions[index]);
+                bool result = AskQuestion(questions[index - 1]);
                 if (result)
                 {
                     numberCorrect++;
                 }
             }
             Console.WriteLine("You got " + GetPercentCorrect(numberCorrect, questions.Length) + " correct");
-        }
-
-        /*Coninueing from the main method, the passed in random variable will choose a random index from 0 to the length
-         * of the questions file minus 1 to give an index for the next question. Using the random.next function should also prevent 
-         * double numbers from being chosen a second time.
-         */
-        public static int GetRandomIndex(Random random, Question[] questions)
-        {
-            return random.Next(questions.Length);
         }
 
         public static bool CheckIfArrayContainsInt(int[] indices, int randomIndex)
@@ -54,7 +45,7 @@ namespace PrincessBrideTrivia
         }
 
         public static string GetPercentCorrect(double numberCorrectAnswers, double numberOfQuestions)
-            //changed the passed in objects to double from int --ao
+        //changed the passed in objects to double from int --ao
         {
             return (numberCorrectAnswers / numberOfQuestions * 100) + "%";
         }
