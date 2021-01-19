@@ -5,9 +5,9 @@ using System.IO;
 
 namespace Logger
 {
-    class FileLogger : BaseLogger
+    public class FileLogger : BaseLogger
     {
-        private string FilePath { get; set; }
+        public string FilePath { get; set; }
         public override string ClassName { get; set; }
         public FileLogger(string filePath)
         {
@@ -26,11 +26,12 @@ namespace Logger
                 throw new ArgumentNullException(FilePath);
             }
 
-            string dateTime = DateTime.Now.ToString("yyyy-MM-dd_HH:mm:ss");
+            string dateTime = DateTime.Now.ToString("yyyy-MM-dd_HH:mm");
             appendMessage.WriteLine("Date/time: " + dateTime);
             appendMessage.WriteLine(ClassName);
             appendMessage.WriteLine(logLevel);
             appendMessage.WriteLine(message);
+            appendMessage.Dispose();
         }
     }
 }

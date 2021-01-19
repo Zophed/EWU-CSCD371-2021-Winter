@@ -6,8 +6,8 @@ namespace Logger
     public class LogFactory
     {
         public string? FilePath { get; private set; }
-        private string? ClassName { get; set; } = "LogFactory";
-        public BaseLogger CreateLogger(string className)
+        public string ClassName { get; private set; } = "LogFactory";
+        public BaseLogger CreateLogger(string? className)
         {
             BaseLogger? logger = null;
             if (className == nameof(FileLogger))
@@ -21,15 +21,15 @@ namespace Logger
                 logger = fileLogger;
                 
             }
-            if(logger != null)
+            if (logger == null)
+            {
+                throw new NullReferenceException("BaseLogger is null, try again");
+            }
+            else
             {
                 return logger;
             }
             
-            else
-            {
-                throw new NullReferenceException("BaseLogger is null, try again");
-            }
         }
 
         public void ConfigureFileLogger(string filePath)
@@ -39,7 +39,13 @@ namespace Logger
 
         private static string GetFilePath()
         {
-            return Path.GetRandomFileName();
+            if (File.Exists("testFile.txt"))
+            {
+                string file = "testFile.txt";
+                return file;
+            }
+            else
+                throw new FileNotFoundException();
         }
     }
 }
