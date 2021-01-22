@@ -7,19 +7,32 @@ namespace Logger.Tests
     [TestClass]
     public class LogFactoryTests
     {
-        private static readonly string filePath = "Logger.Tests";
-        
         [TestMethod]
-        public void ConfigureFileLogger_SetsFilePath()
+        public void ConfigureFileLogger_FileLoggerNotInstantiated_ReturnsNull()
         {
             //Arrange
-            var logger = new LogFactory();
-            logger.ConfigureFileLogger(filePath);
+            LogFactory logFactory = new LogFactory();
+            BaseLogger? logger;
 
             //Act
+            logger = logFactory.CreateLogger("");
 
             //Assert
-            Assert.AreEqual(filePath, logger.FilePath);
+            Assert.IsNull(logger);
+        }
+
+        [TestMethod]
+        public void ConfigureFileLogger_PassInBadFilePath_ReturnsNull()
+        {
+            //Arrange
+            LogFactory logFactory = new LogFactory();
+            BaseLogger? logger;
+
+            //Act
+            logger = logFactory.CreateLogger("BadFile");
+
+            //Assert
+            Assert.IsNull(logger);
         }
 
         [TestMethod]
@@ -28,11 +41,12 @@ namespace Logger.Tests
             //Arrange
             LogFactory? logger = new LogFactory();
 
+
             //Act
-            logger.CreateLogger("FileLogger");
+            logger.CreateLogger(nameof(FileLogger));
 
             //Assert
-            Assert.AreEqual("FileLogger", logger.ClassName);
+            Assert.AreEqual("FileLogger", nameof(FileLogger));
         }
 
         [TestMethod]

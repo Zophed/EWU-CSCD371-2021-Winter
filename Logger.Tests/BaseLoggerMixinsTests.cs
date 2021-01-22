@@ -12,14 +12,10 @@ namespace Logger.Tests
         public void Error_WithNullLogger_ThrowsException()
         {
             // Arrange
-
             // Act
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             BaseLoggerMixins.Error(null, "");
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
             // Assert
-            
         }
 
         [TestMethod]
@@ -27,14 +23,10 @@ namespace Logger.Tests
         public void Warning_WithNullLogger_ThrowsException()
         {
             // Arrange
-
             // Act
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             BaseLoggerMixins.Warning(null, "");
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
             // Assert
-
         }
 
         [TestMethod]
@@ -42,14 +34,10 @@ namespace Logger.Tests
         public void Information_WithNullLogger_ThrowsException()
         {
             // Arrange
-
             // Act
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             BaseLoggerMixins.Information(null, "");
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
             // Assert
-
         }
 
         [TestMethod]
@@ -57,14 +45,10 @@ namespace Logger.Tests
         public void Debug_WithNullLogger_ThrowsException()
         {
             // Arrange
-
             // Act
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             BaseLoggerMixins.Debug(null, "");
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
             // Assert
-
         }
 
         [TestMethod]
@@ -90,7 +74,6 @@ namespace Logger.Tests
 
             //Act
             logger.Warning("Warning Message {0}", 31);
-            
 
             //Assert
             Assert.AreEqual("Warning Message 31", logger.LoggedMessages[0].Message);
@@ -105,7 +88,6 @@ namespace Logger.Tests
             //Act
             logger.Information("Information Message {0}", 1);
 
-
             //Assert
             Assert.AreEqual("Information Message 1", logger.LoggedMessages[0].Message);
         }
@@ -119,7 +101,6 @@ namespace Logger.Tests
             //Act
             logger.Debug("Debug Message {0}", 15);
 
-
             //Assert
             Assert.AreEqual("Debug Message 15", logger.LoggedMessages[0].Message);
         }
@@ -128,7 +109,6 @@ namespace Logger.Tests
 
     public class TestLogger : BaseLogger
     {
-        public override string ClassName { get; set; } = "TestLogger";
         public List<(LogLevel LogLevel, string Message)> LoggedMessages { get; } = new List<(LogLevel, string)>();
 
         public override void Log(LogLevel logLevel, string message)

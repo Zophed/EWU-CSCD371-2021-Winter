@@ -4,6 +4,6 @@
     {
         public abstract void Log(LogLevel logLevel, string message);
 
-        public abstract string ClassName { get; set; }
+        public string? ClassName { get; set; }
     }
 }

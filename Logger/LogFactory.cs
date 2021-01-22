@@ -5,47 +5,31 @@ namespace Logger
 {
     public class LogFactory
     {
-        public string? FilePath { get; private set; }
-        public string ClassName { get; private set; } = "LogFactory";
-        public BaseLogger CreateLogger(string? className)
-        {
-            BaseLogger? logger = null;
-            if (className == nameof(FileLogger))
-            {
-                ClassName = className;
-                string filePath = GetFilePath();
-                ConfigureFileLogger(filePath);
-#pragma warning disable CS8604 // Possible null reference argument.
-                FileLogger fileLogger = new FileLogger(FilePath);
-#pragma warning restore CS8604 // Possible null reference argument.
-                logger = fileLogger;
-                
-            }
-            if (logger == null)
-            {
-                throw new NullReferenceException("BaseLogger is null, try again");
-            }
-            else
-            {
-                return logger;
-            }
-            
-        }
+        private string? FilePath { get; set; }
 
         public void ConfigureFileLogger(string filePath)
         {
-            FilePath = filePath;
+            this.FilePath = filePath;
         }
 
-        private static string GetFilePath()
+        public BaseLogger? CreateLogger(string className)
         {
-            if (File.Exists("testFile.txt"))
+            /*
+             * Cancels the operation if the filePath value was not assignmed by
+             * the ConfigureFileLogger method
+            */
+            if (FilePath == null)
             {
-                string file = "testFile.txt";
-                return file;
+                return null;
             }
-            else
-                throw new FileNotFoundException();
+            else if (!File.Exists(FilePath))
+            {
+                return null;
+            }
+
+            FileLogger logger = new FileLogger(FilePath) { ClassName = className };
+               
+            return logger;  
         }
     }
 }
