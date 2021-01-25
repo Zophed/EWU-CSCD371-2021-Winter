@@ -8,82 +8,93 @@ namespace CanHazFunny.Tests
     public class JesterTests
     {
         [TestMethod]
-        public void JesterConstructor_AssignsServices()
+        public void JesterConstructor_AssignsServices_ValidJokeService()
         {
             //Assign
-            //Mock<JokeService> mockJoke = new Mock<JokeService>();
-            //mockJoke.Setup(jokeService => jokeService.GetJoke())
-            //        .Returns("Big joke, lots of laughs. Stand-up career in near future");
-
-            //Mock<JokeOutputService> mockOutput = new Mock<JokeOutputService>();
-            //mockOutput.Setup(outputService => outputService.PrintJoke("joke"));
-            JokeService jokeService = new JokeService();
-            JokeOutputService outputService = new JokeOutputService();
+            IJokeService jokeService = new JokeService();
+            IJokeOutput outputService = new JokeOutputService();
 
             //Act
             Jester jokeTest = new Jester(outputService, jokeService);
 
             //Assert
             Assert.IsNotNull(jokeTest.JokeService);
-            Assert.IsNotNull(jokeTest.OutputService);
+            Assert.IsNotNull(jokeTest.JokeOutputService);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void JesterConstructor_AssignsNullService_ThrowsError()
+        public void JesterConstructor_AssignsNullJokeService_ThrowsError()
         {
             //Assign
-            JokeService jokeService = null;
-            JokeOutputService outputService = null;
-
+            _ = new Jester(new JokeOutputService(), null);
+            
             //Act
-            _ = new Jester(outputService, jokeService);
 
             //Assert
         }
 
         [TestMethod]
-        public void GetJoke_ServiceSendsForJoke_ReturnsJokeToString()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void JesterConstructor_AssignsNullOutputService_ThrowsError()
         {
             //Assign
-            JokeService jokeService = new JokeService();
-            JokeOutputService outputService = new JokeOutputService();
-            Jester jester = new Jester(outputService, jokeService);
+            _ = new Jester(null, new JokeService());
 
             //Act
-            string result = jester.GetJoke();
+
+            //Assert
+        }
+
+        [TestMethod]
+        public void JokeServiceGetJoke_ServiceSendsForJoke_ReturnsJokeToString()
+        {
+            //Assign
+            IJokeService jokeService = new JokeService();
+
+            //Act
+            string result = jokeService.GetJoke();
 
             //Assert
             Assert.IsNotNull(result);
         }
 
         [TestMethod]
-        public void TellJoke_FiltersOutChuckNorris()
+        public void TellJoke_FiltersOutChuckNorris_RetryUntilNoNorris()
         {
             //Assign
-            JokeService jokeService = new JokeService();
-            JokeOutputService outputService = new JokeOutputService();
-            Jester jester = new Jester(outputService, jokeService);
+            Mock<IJokeService> mock = new Mock<IJokeService>();
+            mock.SetupSequence(JokeService => JokeService.GetJoke())
+                .Returns("Chuck Norris joke")
+                .Returns("Chuck Norris sucks")
+                .Returns("Knock Knock joke");
+            Jester jester = new Jester(new JokeOutputService(), mock.Object);
+
+            //Act
+            jester.TellJoke();
+
+
+            //Assert
+            mock.Verify(jokeService => jokeService.GetJoke(), Times.Exactly(3));
+        }
+
+        [TestMethod]
+        public void PrintJoke_WritesInputJokeIntoConsole()
+        {
+            //Assign
+            Mock<IJokeService> mockJoke = new Mock<IJokeService>();
+            mockJoke.SetupSequence(jokeService => jokeService.GetJoke())
+                .Returns("Knock Knock joke");
+
+            Mock<IJokeOutput> mockOutput = new Mock<IJokeOutput>();
+            mockOutput.SetupSequence(jokeOutput => jokeOutput.PrintJoke("Knock Knock joke"));
+            Jester jester = new Jester(mockOutput.Object, mockJoke.Object);
 
             //Act
             jester.TellJoke();
 
             //Assert
-            //mockJoke.Verify(mock => mock.GetJoke(), Times.Once());
+            mockOutput.VerifyAll();
         }
-
-    //[TestMethod]
-    //public void PrintJoke_WritesInputJokeIntoConsole()
-    //{
-    //    //Assign
-    //    JokeService jokeService = new JokeService();
-    //    JokeOutputService outputService = new JokeOutputService();
-    //    Jester jester = new Jester(outputService, jokeService);
-
-    //    //Act
-
-
-    //    //Assert
-    //}
-}
+    }
 }

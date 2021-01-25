@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace CanHazFunny
 {
-    public class Jester:IJokeService,IJokeOutput
+    public class Jester
     {
-        private JokeOutputService outputService;
-        private JokeService jokeService;
-        public JokeOutputService OutputService { get => outputService; set => outputService = value; }
-        public JokeService JokeService { get => jokeService; set => jokeService = value; }
+        private IJokeOutput outputService;
+        private IJokeService jokeService;
+        public IJokeOutput JokeOutputService { get => outputService; set => outputService = value; }
+        public IJokeService JokeService { get => jokeService; set => jokeService = value; }
 
-        public Jester(JokeOutputService outputService, JokeService jokeService)
+        public Jester(IJokeOutput outputService, IJokeService jokeService)
         {
             if (outputService != null && jokeService != null)
             {
-                this.OutputService = outputService;
+                this.JokeOutputService = outputService;
                 this.JokeService = jokeService;
             }
             else
@@ -28,20 +28,10 @@ namespace CanHazFunny
 
         public void TellJoke()
         {
-            string joke = JokeService.GetJoke();
+            string joke = this.JokeService.GetJoke();
             while(joke.Contains("Chuck") || joke.Contains("Norris"))
-                joke = JokeService.GetJoke();
-            OutputService.PrintJoke(joke);
-        }
-
-        public string GetJoke()
-        {
-            return JokeService.GetJoke();
-        }
-
-        public void PrintJoke(string joke)
-        {
-            OutputService.PrintJoke(joke);
+                joke = this.JokeService.GetJoke();
+            this.JokeOutputService.PrintJoke(joke);
         }
     }
 }
