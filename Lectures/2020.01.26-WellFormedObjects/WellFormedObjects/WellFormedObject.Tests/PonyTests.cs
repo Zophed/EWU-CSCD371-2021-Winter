@@ -22,7 +22,7 @@ namespace WellFormedObject.Tests
             };
 
             Assert.AreNotEqual(pony1, pony2);
-            Assert.IsFalse(pony1 != pony2);
+            Assert.IsTrue(pony1 != pony2);
             Assert.IsFalse(null == pony1);
             Assert.IsFalse(pony1 == null);
         }
