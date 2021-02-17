@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 
 namespace LinqStuff.Tests
@@ -26,7 +27,7 @@ namespace LinqStuff.Tests
             string text = (object)IThing.Data;
 #endif
 
-    record Thing(int number);
+    record Thing(int umber);
 
 
     [TestClass]
@@ -125,6 +126,58 @@ namespace LinqStuff.Tests
 
 
 
+        }
+
+        [TestMethod]
+        public void GivenMembersOnString_AggregateTheTotalNumberOfCharacterForAllMembers_Returns842()
+        {
+            IEnumerable<string> methods = typeof(string).GetMembers().Select(item => item.Name);
+
+            int result = methods.Aggregate(0, (total, next) => total += next.Length);
+            int expected = methods.Select(item => item.Length).Sum();
+
+            // Return the total number of characters in all members using LINQ.
+            Assert.AreEqual(result, expected);
+        }
+
+        [TestMethod]
+        public void ReturnMethodInfoObjectWithTheLongestNameThatBeginsWithGet()
+        {
+            IEnumerable<MemberInfo> members = typeof(string).GetMethods();
+            IEnumerable<MethodInfo> methods = members.Where(item => item.MemberType == MemberTypes.Method).Cast<MethodInfo>();
+            // or just
+            methods = typeof(string).GetMethods();
+
+            methods = methods.Where(item => item.Name.StartsWith("Get"));
+
+            // Possible: Preferably avoid calling ToList(), as it has a for each NOT RECOMMENDED unless you need a list
+                methods.ToList().ForEach((item) =>
+                {
+                    Assert.IsTrue(item.Name.StartsWith("Get"));
+                });
+            
+            // Using a foreach loop; simple, but "noisey"
+            foreach (string item in methods.Select(item=>item.Name))
+            {
+                Assert.IsTrue(item.StartsWith("Get"));
+            }
+
+            // or using LINQ (Obviously the best way to do anything)
+            Assert.IsTrue(methods.All(item=>item.Name.StartsWith("Get")));// Simple is better
+
+            // Search Aggregate & LINQ
+            MethodInfo actual = methods.Aggregate(
+                (longestMethod, nextItem) => longestMethod.Name.Length > nextItem.Name.Length ? longestMethod : nextItem);
+
+            // Use OrderBy()
+            MethodInfo expected = methods.OrderBy(item => item.Name.Length).Last();
+
+                // Check this out, order by length and then order them alphabetically
+                /* Bad Code */ MethodInfo expected2 = methods.OrderBy(item => item.Name.Length).OrderBy(item => item).Last();// This will not work, OrderBy() overrides all previous OrderBy()
+
+                MethodInfo expected3 = methods.OrderBy(item => item.Name.Length).ThenBy(item => item).Last();// This will use both OrderBy() and then apply the ThenBy() to apply both sorting
+
+            Assert.AreEqual<string>(expected.Name, actual.Name);
         }
     }
 }
