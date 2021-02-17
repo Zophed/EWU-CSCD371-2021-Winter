@@ -141,7 +141,7 @@ namespace LinqStuff.Tests
         }
 
         [TestMethod]
-        public void ReturnMethodInfoObjectWithTheLongestNameThatBeginsWithGet()
+        public void GivenMembersOnString_ReturnMethodWithTheLongestNameThatBeginsWithGet_Returns842()
         {
             IEnumerable<MemberInfo> members = typeof(string).GetMethods();
             IEnumerable<MethodInfo> methods = members.Where(item => item.MemberType == MemberTypes.Method).Cast<MethodInfo>();
